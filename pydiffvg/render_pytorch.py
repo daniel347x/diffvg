@@ -426,7 +426,6 @@ class RenderFunction(torch.autograd.Function):
             print("Scene construction, time: %.5f s" % time_elapsed)
 
         if output_type == OutputType.color:
-            print("Output type is color")
             assert eval_positions.shape[0] == 0
             rendered_image = torch.zeros(height, width, 4, device=pydiffvg.get_device())
         else:
@@ -504,10 +503,6 @@ class RenderFunction(torch.autograd.Function):
         ctx.use_prefiltering = use_prefiltering
         ctx.eval_positions = eval_positions
         ctx.backward_clamp_gradient_mag = backward_clamp_gradient_mag
-        if rendered_image is not None:
-            print(f"Forward, rendered_image.shape: {rendered_image.shape}")
-        if background_image is not None:
-            print(f"Forward, background_image.shape: {background_image.shape}")
         return rendered_image
 
     @staticmethod
@@ -809,9 +804,6 @@ class RenderFunction(torch.autograd.Function):
         if not grad_img.is_contiguous():
             grad_img = grad_img.contiguous()
 
-        if grad_img is not None:
-            print(f"Backward, grad_img.shape: {grad_img.shape}")
-
         scene = ctx.scene
         width = ctx.width
         height = ctx.height
@@ -823,9 +815,6 @@ class RenderFunction(torch.autograd.Function):
         eval_positions = ctx.eval_positions
         background_image = ctx.background_image
         backward_clamp_gradient_mag = ctx.backward_clamp_gradient_mag
-
-        if background_image is not None:
-            print(f"Backward, background_image.shape: {background_image.shape}")
 
         if backward_clamp_gradient_mag is None:
             assert torch.isfinite(grad_img).all()
