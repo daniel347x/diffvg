@@ -504,8 +504,10 @@ class RenderFunction(torch.autograd.Function):
         ctx.use_prefiltering = use_prefiltering
         ctx.eval_positions = eval_positions
         ctx.backward_clamp_gradient_mag = backward_clamp_gradient_mag
-        print(f"Forward, rendered_image.shape: {rendered_image.shape}")
-        print(f"Forward, background_image.shape: {background_image.shape}")
+        if rendered_image is not None:
+            print(f"Forward, rendered_image.shape: {rendered_image.shape}")
+        if background_image is not None:
+            print(f"Forward, background_image.shape: {background_image.shape}")
         return rendered_image
 
     @staticmethod
@@ -807,7 +809,8 @@ class RenderFunction(torch.autograd.Function):
         if not grad_img.is_contiguous():
             grad_img = grad_img.contiguous()
 
-        print(f"Backward, grad_img.shape: {grad_img.shape}")
+        if grad_img is not None:
+            print(f"Backward, grad_img.shape: {grad_img.shape}")
 
         scene = ctx.scene
         width = ctx.width
@@ -821,7 +824,8 @@ class RenderFunction(torch.autograd.Function):
         background_image = ctx.background_image
         backward_clamp_gradient_mag = ctx.backward_clamp_gradient_mag
 
-        print(f"Backward, background_image.shape: {background_image.shape}")
+        if background_image is not None:
+            print(f"Backward, background_image.shape: {background_image.shape}")
 
         if backward_clamp_gradient_mag is None:
             assert torch.isfinite(grad_img).all()
