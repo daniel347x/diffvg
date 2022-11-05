@@ -440,8 +440,10 @@ class RenderFunction(torch.autograd.Function):
                 )
 
         if background_image is not None:
+            print("AAA")
             background_image = background_image.to(pydiffvg.get_device())
             if background_image.shape[2] == 3:
+                print("BBB")
                 background_image = torch.cat(
                     (
                         background_image,
@@ -454,6 +456,7 @@ class RenderFunction(torch.autograd.Function):
                     ),
                     dim=2,
                 )
+            print("CCC")
             background_image = background_image.contiguous()
             assert background_image.shape[0] == rendered_image.shape[0]
             assert background_image.shape[1] == rendered_image.shape[1]
